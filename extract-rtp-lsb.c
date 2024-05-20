@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 	struct pcap_pkthdr header;
 	const unsigned char *packet;
 	unsigned int hide_cnt = 0;
-	char bit_in_char = 8;
+	char bit_in_char = 0;
 	int consec_zero = 0;
 
 	if (argc != 3) {
@@ -224,11 +224,11 @@ int main(int argc, char *argv[])
 				} else {
 					consec_zero = 0;
 				}
-				sec_buffer = sec_buffer & (unsigned char)((payload[i] & 1) << bit_in_char);
+				sec_buffer = sec_buffer | (unsigned char)((payload[i] & 1) << bit_in_char);
 				bit_in_char--;
-				if (bit_in_char == 0) {
+				if (bit_in_char == 8) {
 					fwrite(&sec_buffer, 1, 1, fptr);
-					bit_in_char = 8;
+					bit_in_char = 0;
 					sec_buffer = 0;
 				}
 			if (consec_zero >= 7) {
